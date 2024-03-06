@@ -1,0 +1,256 @@
+{% extends 'home.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<main class="main">
+	<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+		<div class="container">
+			<h1 class="page-title">My Account<span>Shop</span></h1>
+		</div><!-- End .container -->
+	</div><!-- End .page-header -->
+	<nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
+		<div class="container">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="/">Home</a></li>
+				<li class="breadcrumb-item"><a href="#">Shop</a></li>
+				<li class="breadcrumb-item active" aria-current="page">My Account</li>
+			</ol>
+		</div><!-- End .container -->
+	</nav><!-- End .breadcrumb-nav -->
+
+	<div class="page-content">
+		<div class="dashboard">
+			<div class="container">
+				<div class="row">
+					<aside class="col-md-4 col-lg-2">
+						<ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
+							<li class="nav-item">
+								<a class="nav-link active" id="tab-dashboard-link" data-toggle="tab"
+									href="#tab-dashboard" role="tab" aria-controls="tab-dashboard"
+									aria-selected="true">Dashboard</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab"
+									aria-controls="tab-orders" aria-selected="false">Orders</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" id="tab-downloads-link" data-toggle="tab" href="#tab-downloads"
+									role="tab" aria-controls="tab-downloads" aria-selected="false">Downloads</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" id="tab-address-link" data-toggle="tab" href="#tab-address"
+									role="tab" aria-controls="tab-address" aria-selected="false">Adresses</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account"
+									role="tab" aria-controls="tab-account" aria-selected="false">Account Details</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="#">Sign Out</a>
+							</li>
+						</ul>
+					</aside><!-- End .col-lg-3 -->
+
+					<div class="col-md-9 col-lg-10">
+						<div class="tab-content">
+							<div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel"
+								aria-labelledby="tab-dashboard-link">
+								<p>Hello <span class="font-weight-normal text-dark">{{ request.user}}</span> (not <span
+										class="font-weight-normal text-dark">{{ request.user}}</span>? <a
+										href="/logout">Log out</a>)
+									<br>
+									From your account dashboard you can view your <a href="#tab-orders"
+										class="tab-trigger-link link-underline">recent orders</a>, manage your <a
+										href="#tab-address" class="tab-trigger-link">shipping and billing addresses</a>,
+									and <a href="#tab-account" class="tab-trigger-link">edit your password and account
+										details</a>.
+								</p>
+							</div><!-- .End .tab-pane -->
+
+							<div class="tab-pane fade" id="tab-orders" role="tabpanel"
+								aria-labelledby="tab-orders-link">
+
+								<table class="table table-striped">
+									<thead class="thead-dark">
+										<tr>
+											<th scope="col" class="px-5">Order ID</th>
+											<th scope="col" class="px-5">First Name</th>
+											<th scope="col" class="px-5">Last Name</th>
+											<th scope="col" class="px-5">Total</th>
+											<th scope="col" class="px-5">Date</th>
+											<th scope="col" class="px-5">More</th>
+										</tr>
+									</thead>
+									<tbody>
+
+										{% for order in orders %}
+										<tr>
+											<td>&nbsp;&nbsp;&nbsp;&nbsp;{{order.provider_order_id}}</td>
+											<td>{{order.first_name}}</td>
+											<td>{{order.last_name}}</td>
+											<td>&nbsp;&nbsp;&nbsp;RS {{order.total_amount}}</td>
+											<td>{{order.date}}</td>
+											<td>
+												<button type="button" class="btn btn-tertiary"
+													data-mdb-ripple-color="light" data-toggle="modal"
+													data-target="#exampleModal{{order.id}}">
+													<i class="icon-bars" style="font-size: 20px;"></i>
+												</button>
+											</td>
+										</tr>
+										{% empty %}
+										<p>No order has been made yet.</p>
+										<a href="/" class="btn btn-outline-primary-2 mb-5"><span>GO SHOP</span><i
+												class="icon-long-arrow-right"></i></a>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div><!-- .End .tab-pane -->
+
+							<!-- Modal -->
+							{% for order in orders %}
+							<div class="modal fade" id="exampleModal{{order.id}}" tabindex="-1"
+								aria-labelledby="exampleModalLabel" aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content p-4">
+										<div class="modal-header">
+											<h6>{{order.provider_order_id}}</h6>
+											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+												<span style="font-size: 30px;" aria-hidden="true">&times;</span>
+											</button>
+										</div>
+										<div class="modal-body text-start text-black p-6">
+											<h4 class="mb-2 mt-1" style="color: #35558a;">Thanks for your order</h4>
+											<h6 class="modal-title text-uppercase mb-0" id="exampleModalLabel">
+												{{order.first_name}}
+												{{order.last_name}}</h6>
+											<span class="mb-2 fs-2">{{order.email}}</span><br>
+											<span class="mb-2 fs-2">{{order.phone}}</span><br>
+											<span class="mb-2 fs-2">{{order.address}} , {{order.country}}</span><br>
+											<span class="mb-2 fs-2"><b>Products : {{order.products}}</b></span>
+											<h6 class="mt-2" style="color: #35558a;">Payment summary</h6>
+											<hr class="mt-0 mb-2"
+												style="height: 0; background-color: transparent; opacity: .75; border-top: 2px dashed #9e9e9e;">
+
+											<div class="d-flex justify-content-between">
+												<p class="fw-bold mb-0">Payment ID</p>
+												<p class="text-muted mb-0">{{order.payment_id}}</p>
+											</div>
+
+											<div class="d-flex justify-content-between">
+												<p class="fw-bold mb-0">Signature ID</p>
+												<p class="text-muted mb-0">
+													<i class="fa fa-info-circle" style="font-size:24px" data-toggle="tooltip" data-placement="left" title="{{order.signature_id}}"></i></a></p>
+											</div>
+
+											<div class="d-flex justify-content-between">
+												<p class="w-bold mb-0">Date</p>
+												<p class="text-muted">{{order.date}}</p>
+											</div>
+
+											<div class="d-flex justify-content-between">
+												<p class="w-bold mb-0 mb-0">Shipping</p>
+												<p class="text-muted mb-0">RS 0.00</p>
+											</div>
+
+											<div class="d-flex justify-content-between">
+												<p class="fw-bold"><b>Total</b></p>
+												<p class="fw-bold" style="color: #35558a;"><b>RS {{order.total_amount}}</b></p>
+											</div>
+
+										</div>
+									</div>
+								</div>
+							</div>
+							{% endfor %}
+
+							<div class="tab-pane fade" id="tab-downloads" role="tabpanel"
+								aria-labelledby="tab-downloads-link">
+								<p>No downloads available yet.</p>
+								<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i
+										class="icon-long-arrow-right"></i></a>
+							</div><!-- .End .tab-pane -->
+
+							<div class="tab-pane fade" id="tab-address" role="tabpanel"
+								aria-labelledby="tab-address-link">
+								<p>The following addresses will be used on the checkout page by default.</p>
+
+								<div class="row">
+									<div class="col-lg-6">
+										<div class="card card-dashboard">
+											<div class="card-body">
+												<h3 class="card-title">Billing Address</h3><!-- End .card-title -->
+
+												<p>User Name<br>
+													User Company<br>
+													John str<br>
+													New York, NY 10001<br>
+													1-234-987-6543<br>
+													yourmail@mail.com<br>
+													<a href="#">Edit <i class="icon-edit"></i></a>
+												</p>
+											</div><!-- End .card-body -->
+										</div><!-- End .card-dashboard -->
+									</div><!-- End .col-lg-6 -->
+
+									<div class="col-lg-6">
+										<div class="card card-dashboard">
+											<div class="card-body">
+												<h3 class="card-title">Shipping Address</h3><!-- End .card-title -->
+
+												<p>You have not set up this type of address yet.<br>
+													<a href="#">Edit <i class="icon-edit"></i></a>
+												</p>
+											</div><!-- End .card-body -->
+										</div><!-- End .card-dashboard -->
+									</div><!-- End .col-lg-6 -->
+								</div><!-- End .row -->
+							</div><!-- .End .tab-pane -->
+
+							<div class="tab-pane fade" id="tab-account" role="tabpanel"
+								aria-labelledby="tab-account-link">
+								<form action="#">
+									<div class="row">
+										<div class="col-sm-6">
+											<label>First Name *</label>
+											<input type="text" class="form-control" required>
+										</div><!-- End .col-sm-6 -->
+
+										<div class="col-sm-6">
+											<label>Last Name *</label>
+											<input type="text" class="form-control" required>
+										</div><!-- End .col-sm-6 -->
+									</div><!-- End .row -->
+
+									<label>Display Name *</label>
+									<input type="text" class="form-control" required>
+									<small class="form-text">This will be how your name will be displayed in the account
+										section and in reviews</small>
+
+									<label>Email address *</label>
+									<input type="email" class="form-control" required>
+
+									<label>Current password (leave blank to leave unchanged)</label>
+									<input type="password" class="form-control">
+
+									<label>New password (leave blank to leave unchanged)</label>
+									<input type="password" class="form-control">
+
+									<label>Confirm new password</label>
+									<input type="password" class="form-control mb-2">
+
+									<button type="submit" class="btn btn-outline-primary-2">
+										<span>SAVE CHANGES</span>
+										<i class="icon-long-arrow-right"></i>
+									</button>
+								</form>
+							</div><!-- .End .tab-pane -->
+						</div>
+					</div><!-- End .col-lg-9 -->
+				</div><!-- End .row -->
+			</div><!-- End .container -->
+		</div><!-- End .dashboard -->
+	</div><!-- End .page-content -->
+</main><!-- End .main -->
+
+{% endblock content %}

@@ -1,0 +1,27 @@
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+var options = {
+    "key": "rzp_test_yke62IssIzsbxu", // Enter the Key ID generated from the Dashboard
+    "currency": "INR",
+    "name": "{{name}}",
+    "description": "Jaseem Ecommerce",
+    "image": "https://backend.insideiim.com/wp-content/uploads/2015/08/Flipkart-logo-insideiim.png",
+    "order_id": "{{payment_id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    "callback_url": "http://127.0.0.1:8000/callback/",
+    "prefill": {
+        "name": "{{name}}",
+        "email": "{{email}}",
+        "contact": "{{phone}}"
+    },
+    "notes": {
+        "address": "{{address}}"
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+var rzp1 = new Razorpay(options);
+rzp1.open();
+</script>

@@ -1,0 +1,33 @@
+{% extends 'home.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-5">
+    <table class="table table-striped" border="">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col" class="px-5">Order ID</th>
+                <th scope="col" class="px-5">First Name</th>
+                <th scope="col" class="px-5">Last Name</th>
+                <th scope="col" class="px-5">Total</th>
+                <th scope="col" class="px-5">Date</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {% for order in orders %}
+            <tr>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;{{order.provider_order_id}}</td>
+                <td>{{order.first_name}}</td>
+                <td>{{order.last_name}}</td>
+                <td>&nbsp;&nbsp;&nbsp;RS {{order.total_amount}}</td>
+                <td>{{order.date}}</td>
+            </tr>
+            {% empty %}
+            <p>No order has been made yet.</p>
+            <a href="/" class="btn btn-outline-primary-2 mb-5"><span>GO SHOP</span><i
+                    class="icon-long-arrow-right"></i></a>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

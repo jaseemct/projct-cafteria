@@ -1,0 +1,338 @@
+{% extends 'home.html'%}
+{% load static %}
+
+{% block content %}
+<main class="main">
+
+
+
+    <div class="page-content">
+        <div class="cart">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-9">
+
+                        <table class="table table-cart mt-5 ">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for product in products %}
+                                <tr id="{{product.id}}" style="display:none">
+                                    <td class="product-col">
+                                        <div class="product">
+                                            <figure class="product-media">
+                                                <a href="#">
+                                                    <img src="{{product.image.url}}" alt="Product image" width="100px">
+                                                </a>
+                                            </figure>
+
+                                            <h3 class="product-title fs-5 text-decoration-none">
+                                                {{product.product_name}}
+                                            </h3><!-- End .product-title -->
+                                        </div><!-- End .product -->
+                                    </td>
+                                    <td class="price-col">RS {{product.price}}</td>
+                                    <td class="quantity-col">
+                                        <div class="cart-product-quantity">
+                                            <input type="number" class="form-control" id="input{{product.id}}"
+                                                onchange="changeCart({{product.id}},this.value,{{product.price}})"
+                                                value="1" min="0" max="11" step="1" data-decimals="0" required>
+                                        </div><!-- End .cart-product-quantity -->
+                                    </td>
+                                    <td class="total-col" id="total{{product.id}}">RS {{product.price}}</td>
+                                    <td class="remove-col"><button class="btn-remove"
+                                            onclick="remove({{product.id}})"><img src="/media/remove_btn.png"
+                                                width="20px"></button></td>
+                                </tr>
+                                {% endfor %}
+
+                            </tbody>
+                        </table><!-- End .table table-wishlist -->
+
+
+                    </div><!-- End .col-lg-9 -->
+                    <aside class="col-lg-3 mt-5 ">
+                        <div class="summary summary-cart ms-3" >
+                            <h3 class="summary-title">Cart Total</h3><!-- End .summary-title -->
+
+                            <table class="table table-summary">
+                                <tbody>
+                                    <tr class="summary-subtotal">
+                                        <td>Subtotal:</td>
+                                        <td id="subtotal"></td>
+                                    </tr><!-- End .summary-subtotal -->
+                                    <tr class="summary-shipping">
+                                        <td>Shipping:</td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Shipping:</td>
+                                        <td>Free shipping</td>
+                                    </tr>
+
+                                    <tr class="summary-total">
+                                        <td>Total:</td>
+                                        <td id="nettotal"></td>
+                                    </tr><!-- End .summary-total -->
+                                </tbody>
+                            </table><!-- End .table table-summary -->
+
+                            <a href="/checkout" class="btn btn-outline-primary-2 btn-order btn-block" id="checkoutBtn"><button class="btn btn-success">GO TO
+                                CHECKOUT</button></a>
+                        </div><!-- End .summary -->
+
+                        <a href="/" class="btn btn-outline-dark-2 btn-block mb-3 ms-3"><button class="btn btn-primary">CONTINUE SHOPPING</button><i
+                                class="icon-refresh"></i></a>
+                    </aside><!-- End .col-lg-3 -->
+                </div><!-- End .row -->
+            </div><!-- End .container -->
+        </div><!-- End .cart -->
+    </div><!-- End .page-content -->
+</main><!-- End .main -->
+
+
+</div><!-- End .page-wrapper -->
+
+
+
+
+<div class="social-icons">
+    <a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
+    <a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
+    <a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
+    <a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
+</div><!-- End .social-icons -->
+</div><!-- End .mobile-menu-wrapper -->
+</div><!-- End .mobile-menu-container -->
+
+<!-- Sign in / Register Modal -->
+<div class="modal fade" id="signin-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="icon-close"></i></span>
+                </button>
+
+                <div class="form-box">
+                    <div class="form-tab">
+                        <ul class="nav nav-pills nav-fill" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="signin-tab" data-toggle="tab" href="#signin" role="tab"
+                                    aria-controls="signin" aria-selected="true">Sign In</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="register-tab" data-toggle="tab" href="#register" role="tab"
+                                    aria-controls="register" aria-selected="false">Register</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="tab-content-5">
+                            <div class="tab-pane fade show active" id="signin" role="tabpanel"
+                                aria-labelledby="signin-tab">
+                                <form action="#">
+                                    <div class="form-group">
+                                        <label for="singin-email">Username or email address *</label>
+                                        <input type="text" class="form-control" id="singin-email" name="singin-email"
+                                            required>
+                                    </div><!-- End .form-group -->
+
+                                    <div class="form-group">
+                                        <label for="singin-password">Password *</label>
+                                        <input type="password" class="form-control" id="singin-password"
+                                            name="singin-password" required>
+                                    </div><!-- End .form-group -->
+
+                                    <div class="form-footer">
+                                        <button type="submit" class="btn btn-outline-primary-2">
+                                            <span>LOG IN</span>
+                                            <i class="icon-long-arrow-right"></i>
+                                        </button>
+
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="signin-remember">
+                                            <label class="custom-control-label" for="signin-remember">Remember
+                                                Me</label>
+                                        </div><!-- End .custom-checkbox -->
+
+                                        <a href="#" class="forgot-link">Forgot Your Password?</a>
+                                    </div><!-- End .form-footer -->
+                                </form>
+                                <div class="form-choice">
+                                    <p class="text-center">or sign in with</p>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <a href="#" class="btn btn-login btn-g">
+                                                <i class="icon-google"></i>
+                                                Login With Google
+                                            </a>
+                                        </div><!-- End .col-6 -->
+                                        <div class="col-sm-6">
+                                            <a href="#" class="btn btn-login btn-f">
+                                                <i class="icon-facebook-f"></i>
+                                                Login With Facebook
+                                            </a>
+                                        </div><!-- End .col-6 -->
+                                    </div><!-- End .row -->
+                                </div><!-- End .form-choice -->
+                            </div><!-- .End .tab-pane -->
+                            <div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
+                                <form action="#">
+                                    <div class="form-group">
+                                        <label for="register-email">Your email address *</label>
+                                        <input type="email" class="form-control" id="register-email"
+                                            name="register-email" required>
+                                    </div><!-- End .form-group -->
+
+                                    <div class="form-group">
+                                        <label for="register-password">Password *</label>
+                                        <input type="password" class="form-control" id="register-password"
+                                            name="register-password" required>
+                                    </div><!-- End .form-group -->
+
+                                    <div class="form-footer">
+                                        <button type="submit" class="btn btn-outline-primary-2">
+                                            <span>SIGN UP</span>
+                                            <i class="icon-long-arrow-right"></i>
+                                        </button>
+
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="register-policy"
+                                                required>
+                                            <label class="custom-control-label" for="register-policy">I agree to the <a
+                                                    href="#">privacy policy</a> *</label>
+                                        </div><!-- End .custom-checkbox -->
+                                    </div><!-- End .form-footer -->
+                                </form>
+                                <div class="form-choice">
+                                    <p class="text-center">or sign in with</p>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <a href="#" class="btn btn-login btn-g">
+                                                <i class="icon-google"></i>
+                                                Login With Google
+                                            </a>
+                                        </div><!-- End .col-6 -->
+                                        <div class="col-sm-6">
+                                            <a href="#" class="btn btn-login  btn-f">
+                                                <i class="icon-facebook-f"></i>
+                                                Login With Facebook
+                                            </a>
+                                        </div><!-- End .col-6 -->
+                                    </div><!-- End .row -->
+                                </div><!-- End .form-choice -->
+                            </div><!-- .End .tab-pane -->
+                        </div><!-- End .tab-content -->
+                    </div><!-- End .form-tab -->
+                </div><!-- End .form-box -->
+            </div><!-- End .modal-body -->
+        </div><!-- End .modal-content -->
+    </div><!-- End .modal-dialog -->
+</div><!-- End .modal -->
+
+<script>
+    var total = 0;
+    var id;
+    var value;
+    var actualprice;
+    var carts = JSON.parse(localStorage.getItem("cart-{{request.user}}"));
+    for (const cart of carts) {
+        var result_style = document.getElementById(cart[0]).style;
+        result_style.display = 'table-row';
+        total = Number(total) + (Number(cart[1]) * Number(cart[2]));
+        document.getElementById("total" + cart[0]).innerHTML = Number(cart[1]) * Number(cart[2]);
+        document.getElementById("input" + cart[0]).value = Number(cart[2]);
+    }
+
+    if(total == 0)
+    {
+        document.getElementById("checkoutBtn").href = '#';
+    }
+
+    localStorage.setItem("total", '0');
+    localStorage.setItem("total", total);
+    document.getElementById("subtotal").innerHTML = total;
+    document.getElementById("nettotal").innerHTML = total;
+
+
+
+    //change quantity
+    function changeCart(id, value, actualprice) {
+        if (value != 0) {
+            if (value < 11) {
+                var cart = JSON.parse(localStorage.getItem("cart-{{request.user}}"));
+                var total = localStorage.getItem("subtotal");
+
+                cart.forEach((cart1, index) => {
+                    if (cart1[0] == id) {
+                        if (value > cart1[2]) {
+                            total = Number(total) + Number(1 * actualprice);
+                        }
+                        else {
+                            total = Number(total) - Number(1 * actualprice);
+                        }
+                        cart[index][2] = Number(value);
+                    }
+
+                });
+                localStorage.setItem("cart-{{request.user}}", JSON.stringify(cart));
+                localStorage.setItem("total", total);
+                location.reload();
+            }
+            else {
+                location.reload();
+                document.getElementById("input" + id).value = 10;
+            }
+        }
+        else {
+            location.reload();
+            document.getElementById("input" + id).value = 1;
+        }
+    }
+
+    //Remove item
+    function remove(id) {
+        Swal.fire({
+            title: 'Are you sure to remove this item?',
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: 'Remove',
+            denyButtonText: `Cancel`,
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                var cart = JSON.parse(localStorage.getItem("cart-{{request.user}}"));
+                cart = cart.filter(function (item) {
+                    return item[0] !== id
+                })
+                localStorage.setItem("cart-{{request.user}}", JSON.stringify(cart));
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Item Removed',
+                    text: 'Product is successfully removed from Whishlist'
+                }).then(function () {
+                    location.reload();
+                });
+            }
+        })
+    }
+
+    function coupon() {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Coupon not valid!',
+        }).then((result) => {
+
+        })
+    }
+</script>
+{% endblock %}

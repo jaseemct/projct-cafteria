@@ -1,0 +1,143 @@
+{% extends 'home.html'%}
+{% load static %}
+{% block content %}
+
+
+
+<div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="https://logansroadhouse.com/wp-content/uploads/2017/01/Website-Carousel_FriedCheeseburger.jpg"
+        class="d-block w-100" height="500px" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="https://logansroadhouse.com/wp-content/uploads/2016/12/hamburger-slider.jpg" class="d-block w-100"
+        height="500px" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="https://cdn.tatlerasia.com/asiatatler/i/ph/2018/11/05172115-story-image-206586_cover_1980x1000.jpg"
+        class="d-block w-100" height="500px" alt="...">
+    </div>
+  </div>
+</div>
+
+<div class="container text-center mt-5">
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4">
+    {% for p in product %}
+    <div class="col my-2">
+      <a href="{% url 'product' p.product_id %}">
+        <img src="{{p.image.url}}" alt="Product image" class="card-img-top rounded-3" height="150px">
+      </a>
+      <!-- <img src="https://logansroadhouse.com/wp-content/uploads/2017/01/Website-Carousel_FriedCheeseburger.jpg"
+          class="card-img-top rounded-3" height="150px" alt="..."> -->
+      <div class="card-body">
+        <h5 class="card-title">
+          <h5 href="{% url 'product' p.product_id %}">{{p.product_name}}</h5>
+        </h5>
+        <h5>₹ {{p.price}}</h5>
+        {% if request.user.is_anonymous %}
+        <button class="btn btn-primary disabled">ADD
+          CART</button>
+        {% else %}
+          <button class="btn btn-primary cartBtn" id="cartBtn{{p.id}}" onclick="addToCart({{p.id}},{{p.price}})">ADD
+          CART</button>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+
+
+
+
+  </div>
+</div>
+
+
+
+
+
+
+
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+    crossorigin="anonymous"></script>
+  <script>
+    var id;
+    var value;
+    const cart = [];
+    var cart3 = JSON.parse(localStorage.getItem("cart"));
+    cart3.forEach((cart2) => {
+      cart.push(cart2);
+      document.getElementById('cartBtn'+cart2[0]).className = 'btn btn-secondary disabled';
+      console.log(cart2[1])
+    });
+    function addToCart(id,value) {
+      document.getElementById('cartBtn'+id).className = 'btn btn-secondary disabled';
+      const subcart = [id,value,1];
+      cart.push(subcart);
+      console.log(cart);
+      //var cart2 = cart.filter((value, index, array) => array.indexOf(value) === index);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      if (confirm("Added To Cart, Do you want to go to cart") == true) {
+        window.location = 'cart.html';
+      }
+    }
+  </script> -->
+
+
+<script>
+  //check user is logged or not
+
+  //ckecks local storage exist
+  if (localStorage.getItem("cart-{{request.user}}") === null)
+    localStorage.setItem("cart-{{request.user}}", '');
+
+  // for cart
+  const cart = [];
+  if (localStorage.getItem("cart-{{request.user}}") == '')
+    var cart3 = [];
+  else
+    var cart3 = JSON.parse(localStorage.getItem("cart-{{request.user}}"));
+
+  cart3.forEach((cart2) => {
+    document.getElementById("cartBtn" + cart2[0]).disabled = true;
+  });
+
+  function addToCart(id, value) {
+    Swal.fire({
+      icon: 'success',
+      title: 'Item Added',
+      text: 'Product is successfully added to cart'
+    }).then(function () {
+      location.reload();
+    });
+
+
+    const subcart = [id, value, 1];
+    cart3.push(subcart);
+    localStorage.setItem("cart-{{request.user}}", JSON.stringify(cart3));
+
+
+  }
+
+</script>
+{% endblock %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  // set cart count on nav var
+  var carts = JSON.parse(localStorage.getItem("cart-{{request.user}}"));
+  let elements2 = document.getElementById('cart-count');
+  elements2.innerHTML = carts.length;
+</script>
+<script>
+  // set wishlist count on nav var
+  if (localStorage.getItem("Whishlist-{{request.user}}") != '') {
+    var Whishlists = JSON.parse(localStorage.getItem("Whishlist-{{request.user}}"));
+    let elements = document.getElementById('wishlist-count');
+    elements.innerHTML = Whishlists.length;
+  }
+</script>
+</body>
+
+</html>
